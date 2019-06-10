@@ -17,7 +17,7 @@ passport.use(
     },
     async function passportVerifyCallback(token, tokenSecret, profile, cb) {
       try {
-        conn = await mongoose.createConnection(process.env.MONGODB_ATLAS_URI, {
+        const conn = await mongoose.createConnection(process.env.MONGODB_ATLAS_URI, {
           bufferCommands: false,
           bufferMaxEntries: 0
         });
@@ -27,12 +27,12 @@ passport.use(
             id: profile.id,
             name: profile.displayName,
             username: profile.username,
-            email: profile.emails[0].value,
             avatar: profile.photos[0].value
           },
           (err, user) => {
             if (err) {
               cb(err);
+              return;
             }
             cb(null, user._doc);
           }
